@@ -1,0 +1,38 @@
+package arch.dataaggregator1;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+
+import arch.dataaggregatorinterface.DataAggregator;
+import arch.datasourceinterface.IDataItem;
+import arch.datasourceinterface.IDataSource;
+
+@ApplicationScoped
+@Named("identity")
+public class IdentityDataAggregator extends DataAggregator {
+	
+    @Override
+    public List<IDataItem> get() {
+        List<IDataItem> itemList = new ArrayList<IDataItem>();
+
+        for (int dataSourceIdx = 0; dataSourceIdx < this.dataSources.size(); dataSourceIdx++) {
+            IDataSource dataSource = this.dataSources.get(dataSourceIdx);
+
+            List<IDataItem> dataSourceList = dataSource.getData();
+            for (int dataSourceItemsIdx = 0; dataSourceItemsIdx < dataSourceList.size(); dataSourceItemsIdx++) {
+            	IDataItem item = dataSourceList.get(dataSourceItemsIdx);
+                itemList.add(item);
+            }
+        }
+
+        return itemList;
+    }
+
+	@Override
+	public String getType() {
+		return "identity";
+	}
+}

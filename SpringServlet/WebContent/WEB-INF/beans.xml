@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+       <bean id="DataSource1" class="arch.datasource1.DataSource1"/>
+       <bean id="DataSource2" class="arch.datasource2.DataSource2"/>
+       <bean id="DataSource3" class="arch.datasource3.DataSource3"/>
+       
+       <bean id="IdentityAggregator" class="arch.dataaggregator1.IdentityDataAggregator"/>
+       <bean id="MergeAggregator" class="arch.dataaggregator2.MergeDataAggregator"/>
+       <bean id="SumAggregator" class="arch.dataaggregator3.SumDataAggregator"/>
+       <bean id="IdentityCommentAggregator" class="arch.dataaggregator4.IdentityCommentDataAggregator"/>
+       
+       <bean id="DataSourceService" class="arch.datasourceinterface.DataSourceServiceImpl">
+         <property name="dataSourceList">
+           <map>
+             <entry>
+               <key><value>1</value></key>
+               <ref bean="DataSource1"/>
+             </entry>
+             <entry>
+               <key><value>2</value></key>
+               <ref bean="DataSource2"/>
+             </entry>
+             <entry>
+               <key><value>3</value></key>
+               <ref bean="DataSource3"/>
+             </entry>
+           </map>
+         </property>
+       </bean>
+       <bean id="DataAggregatorService" class="arch.dataaggregatorinterface.DataAggregatorServiceImpl">
+         <property name="dataAggregatorMap">
+           <map>
+             <entry>
+               <key><value>identity</value></key>
+               <ref bean="IdentityAggregator"/>
+             </entry>
+             <entry>
+               <key><value>merge</value></key>
+               <ref bean="MergeAggregator"/>
+             </entry>
+             <entry>
+               <key><value>sum</value></key>
+               <ref bean="SumAggregator"/>
+             </entry>
+             <entry>
+               <key><value>identitycomment</value></key>
+               <ref bean="IdentityCommentAggregator"/>
+             </entry>             
+           </map>
+         </property>
+       </bean>
+       <bean id="DataAggregate" class="arch.dataaggregate.DataAggregate">
+         <property name="dataSourceService" ref="DataSourceService"/>
+         <property name="dataAggregatorService" ref="DataAggregatorService"/>
+       </bean>
+       <bean id="DataDisplay" class="arch.datadisplay.ui.DisplayServlet">
+         <property name="dataAggregate" ref="DataAggregate"/>
+       </bean>
+</beans>
